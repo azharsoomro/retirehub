@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="RetireHub — Your complete warm, human guide to US retirement planning.">
+<title>RetireHub — Plan Your Next Chapter</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────── */
+:root{
+  --cream:   #fdf8f2;
+  --cream2:  #f7efe3;
+  --cream3:  #ede3d4;
+  --card:    #ffffff;
+  --border:  #e8dece;
+  --terra:   #c4633a;   /* terracotta — primary */
+  --terra2:  #a04e2c;
+  --amber:   #d4893b;
+  --sage:    #4e8a63;
+  --rust:    #b84040;
+  --lavender:#7b6b9e;
+  --ink:     #241a0e;
+  --ink2:    #3d2e1e;
+  --muted:   #7c6a57;
+  --light:   #a8957e;
+  --shadow:  rgba(90,55,20,.10);
+  --nav-h:   60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.65;}
+
+/* ── SCROLLBAR ─────────────────────────────────────── */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-thumb{background:var(--cream3);border-radius:3px;}
+
+/* ── NAV ───────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(253,248,242,.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  height:var(--nav-h);display:flex;align-items:center;padding:0 24px;gap:0;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;margin-right:20px;text-decoration:none;}
+.nav-logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--terra),var(--amber));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.nav-brand-name{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.4px;}
+.nav-brand-name span{color:var(--terra);}
+.nav-links{display:flex;gap:1px;overflow-x:auto;flex:1;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
+  padding:6px 11px;border-radius:6px;white-space:nowrap;transition:.15s;}
+.nav-links a:hover{color:var(--ink);background:var(--cream2);}
+.nav-pill{background:var(--terra);color:#fff;border:none;border-radius:20px;
+  padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;margin-left:10px;
+  transition:.15s;}
+.nav-pill:hover{background:var(--terra2);}
+
+/* ── HERO ──────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(150deg,#fef5e7 0%,#fdecd0 45%,#fce8c2 100%);
+  border-bottom:1px solid var(--border);
+  padding:72px 24px 56px;overflow:hidden;position:relative;
+}
+.hero::before{
+  content:'';position:absolute;top:-60px;right:-80px;
+  width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,99,58,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;}
+.hero-left{}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(196,99,58,.1);
+  border:1px solid rgba(196,99,58,.2);border-radius:20px;padding:5px 14px;
+  font-size:12px;font-weight:700;color:var(--terra);text-transform:uppercase;letter-spacing:.8px;margin-bottom:18px;}
+.hero h1{font-size:clamp(30px,5vw,54px);font-weight:900;line-height:1.08;
+  color:var(--ink);letter-spacing:-1px;margin-bottom:16px;}
+.hero h1 em{font-style:normal;color:var(--terra);}
+.hero-sub{font-size:16px;color:var(--muted);max-width:520px;margin-bottom:28px;line-height:1.6;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-terra{background:var(--terra);color:#fff;border:none;border-radius:24px;
+  padding:13px 26px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;
+  transition:.15s;display:inline-block;}
+.btn-terra:hover{background:var(--terra2);}
+.btn-ghost{background:transparent;color:var(--terra);border:2px solid var(--terra);border-radius:24px;
+  padding:11px 24px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;
+  transition:.15s;display:inline-block;}
+.btn-ghost:hover{background:rgba(196,99,58,.06);}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex-shrink:0;}
+.hstat{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;box-shadow:0 2px 12px var(--shadow);min-width:140px;}
+.hstat-val{font-size:24px;font-weight:900;color:var(--terra);line-height:1;}
+.hstat-lbl{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.3;}
+@media(max-width:760px){.hero-inner{grid-template-columns:1fr;}.hero-stats{display:flex;flex-wrap:wrap;}}
+
+/* ── SHARED LAYOUT ─────────────────────────────────── */
+.section-wrap{max-width:1100px;margin:0 auto;padding:60px 24px;}
+.alt-bg{background:var(--cream2);}
+.eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--terra);margin-bottom:10px;}
+h2{font-size:clamp(22px,3.5vw,34px);font-weight:900;color:var(--ink);
+  letter-spacing:-.5px;margin-bottom:10px;line-height:1.15;}
+.sub{font-size:15px;color:var(--muted);max-width:580px;margin-bottom:36px;line-height:1.6;}
+hr.sep{border:none;border-top:1px solid var(--border);}
+
+/* ── DECISION MAP ──────────────────────────────────── */
+.dm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;}
+.dm-card{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:22px;box-shadow:0 2px 10px var(--shadow);transition:.2s;}
+.dm-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--shadow);}
+.dm-num{width:32px;height:32px;background:linear-gradient(135deg,var(--terra),var(--amber));
+  color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;margin-bottom:14px;}
+.dm-card h3{font-size:14px;font-weight:800;color:var(--ink2);margin-bottom:7px;}
+.dm-card p{font-size:13px;color:var(--muted);line-height:1.55;}
+
+/* ── MILESTONES ────────────────────────────────────── */
+.ms-list{display:flex;flex-direction:column;gap:8px;}
+.ms{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;box-shadow:0 1px 6px var(--shadow);transition:.15s;}
+.ms:hover{box-shadow:0 4px 16px var(--shadow);}
+.ms-head{display:flex;align-items:center;gap:18px;padding:18px 22px;cursor:pointer;user-select:none;}
+.ms-badge{min-width:62px;text-align:center;}
+.ms-age{font-size:22px;font-weight:900;color:var(--terra);line-height:1;}
+.ms-sublabel{font-size:10px;color:var(--light);text-transform:uppercase;letter-spacing:.6px;}
+.ms-divider{width:1px;height:40px;background:var(--border);flex-shrink:0;}
+.ms-info{flex:1;}
+.ms-info h3{font-size:15px;font-weight:800;color:var(--ink2);margin-bottom:3px;}
+.ms-info p{font-size:12px;color:var(--muted);}
+.ms-toggle{width:28px;height:28px;background:var(--cream2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:14px;transition:.2s;flex-shrink:0;}
+.ms-head.open .ms-toggle{background:var(--terra);color:#fff;transform:rotate(180deg);}
+.ms-body{display:none;padding:0 22px 20px 102px;border-top:1px solid var(--border);}
+.ms-body.show{display:block;}
+.ms-body p{font-size:14px;color:var(--muted);margin-top:14px;line-height:1.6;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.tag{border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;}
+.tag-g{background:#e8f5ec;color:#3a7a50;border:1px solid #b8dfc4;}
+.tag-a{background:#fef3e2;color:#a06020;border:1px solid #f5d89a;}
+.tag-r{background:#fdeaea;color:#b03030;border:1px solid #f0b8b8;}
+.tip{background:linear-gradient(135deg,#fff8f0,#fff3e8);border:1px solid rgba(196,99,58,.2);
+  border-radius:10px;padding:12px 16px;font-size:13px;color:var(--terra2);margin-top:14px;
+  line-height:1.5;}
+
+/* ── CALCULATOR ────────────────────────────────────── */
+.calc-outer{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  box-shadow:0 4px 24px var(--shadow);overflow:hidden;}
+.calc-header{background:linear-gradient(135deg,var(--terra),var(--amber));padding:24px 28px;}
+.calc-header h3{font-size:18px;font-weight:800;color:#fff;margin-bottom:4px;}
+.calc-header p{font-size:13px;color:rgba(255,255,255,.75);}
+.calc-body{padding:28px;}
+.input-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;}
+.ifield{display:flex;flex-direction:column;gap:6px;}
+.ifield label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);}
+.iw{position:relative;}
+.ipre,.isuf{position:absolute;top:50%;transform:translateY(-50%);color:var(--light);font-size:13px;pointer-events:none;}
+.ipre{left:11px;}.isuf{right:11px;}
+.iw input{padding-left:24px;}
+.iw.has-suf input{padding-right:26px;}
+input[type=number],select{
+  width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;
+  color:var(--ink);font-size:14px;padding:10px 13px;transition:.15s;
+}
+input[type=number]:focus,select:focus{outline:none;border-color:var(--terra);}
+.rrow{display:flex;align-items:center;gap:10px;}
+input[type=range]{flex:1;accent-color:var(--terra);height:5px;cursor:pointer;}
+.rv{background:var(--cream2);border:1px solid var(--border);border-radius:8px;
+  padding:4px 10px;font-size:13px;min-width:50px;text-align:center;
+  color:var(--terra);font-weight:700;}
+.run-btn{
+  width:100%;margin-top:22px;padding:14px;
+  background:linear-gradient(135deg,var(--terra),var(--amber));
+  border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:800;
+  cursor:pointer;transition:.15s;letter-spacing:.2px;
+}
+.run-btn:hover{opacity:.9;transform:translateY(-1px);}
+/* results */
+.calc-results{display:none;padding:0 28px 28px;}
+.score-panel{background:linear-gradient(135deg,#fff8f2,#fef3e5);border:1px solid rgba(196,99,58,.2);
+  border-radius:14px;padding:18px 20px;margin-bottom:22px;}
+.sp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.sp-label{font-size:14px;font-weight:700;color:var(--ink2);}
+.sp-pct{font-size:22px;font-weight:900;}
+.bar-track{background:var(--cream3);border-radius:4px;height:10px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s;}
+.sp-msg{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+.kpi{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.kpi-l{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;font-weight:700;}
+.kpi-v{font-size:20px;font-weight:900;margin-bottom:3px;}
+.kpi-s{font-size:11px;color:var(--muted);}
+.kpi.k1 .kpi-v{color:var(--terra);}
+.kpi.k2 .kpi-v{color:var(--amber);}
+.kpi.k3 .kpi-v{color:var(--sage);}
+.kpi.k4 .kpi-v{color:var(--rust);}
+.chart-box{height:260px;position:relative;}
+@media(max-width:650px){.kpi-row{grid-template-columns:1fr 1fr;}}
+
+/* ── AGE TABS ──────────────────────────────────────── */
+.age-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;}
+.atab{background:var(--card);border:1.5px solid var(--border);border-radius:20px;
+  padding:8px 18px;font-size:14px;font-weight:700;cursor:pointer;color:var(--muted);transition:.15s;}
+.atab:hover{border-color:var(--terra);color:var(--terra);}
+.atab.on{background:var(--terra);border-color:var(--terra);color:#fff;}
+.age-panel{display:none;}
+.age-panel.on{display:block;}
+.ap-banner{background:linear-gradient(135deg,#fff4ec,#feebd8);border:1px solid rgba(196,99,58,.2);
+  border-radius:16px;padding:22px 26px;margin-bottom:16px;display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;}
+.ap-age-big{font-size:56px;font-weight:900;color:var(--terra);line-height:1;flex-shrink:0;}
+.ap-title{font-size:18px;font-weight:800;color:var(--ink2);margin-bottom:6px;}
+.ap-desc{font-size:14px;color:var(--muted);line-height:1.6;max-width:500px;}
+.ap-links{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;}
+.ap-links a{font-size:12px;color:var(--terra);text-decoration:none;font-weight:600;}
+.ap-links a:hover{text-decoration:underline;}
+.ap-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.apc{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:0 2px 8px var(--shadow);}
+.apc h4{font-size:13px;font-weight:800;color:var(--ink2);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+.apc ul{list-style:none;padding:0;}
+.apc ul li{font-size:13px;color:var(--muted);padding:6px 0 6px 18px;position:relative;
+  border-bottom:1px solid var(--cream2);line-height:1.5;}
+.apc ul li:last-child{border:none;}
+.apc ul li::before{position:absolute;left:0;font-size:12px;}
+.apc.pros li::before{content:'✓';color:var(--sage);}
+.apc.cons li::before{content:'⚠';color:var(--amber);}
+@media(max-width:600px){.ap-cols{grid-template-columns:1fr;}}
+
+/* ── MEDICARE TABLE ────────────────────────────────── */
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:0 2px 10px var(--shadow);}
+table{width:100%;border-collapse:collapse;background:var(--card);}
+thead tr{background:var(--cream2);}
+th{padding:13px 16px;font-size:11px;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--muted);text-align:left;border-bottom:1px solid var(--border);font-weight:700;}
+td{padding:13px 16px;font-size:13px;border-bottom:1px solid var(--cream2);vertical-align:top;line-height:1.5;}
+td:first-child{font-weight:700;color:var(--ink2);background:var(--cream);}
+tr:last-child td{border:none;}
+.yes{color:var(--sage);font-weight:600;}
+.no{color:var(--rust);font-weight:600;}
+.ok{color:var(--amber);font-weight:600;}
+.med-warning{background:#fdeaea;border:1px solid #f5c0c0;border-radius:10px;
+  padding:13px 16px;font-size:13px;color:var(--rust);margin-top:16px;line-height:1.5;}
+
+/* ── ACCOUNTS ──────────────────────────────────────── */
+.acc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;
+  box-shadow:0 2px 10px var(--shadow);transition:.2s;}
+.acc:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--shadow);}
+.acc-icon{font-size:26px;margin-bottom:12px;}
+.acc h3{font-size:15px;font-weight:800;color:var(--ink2);margin-bottom:8px;}
+.acc p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:12px;}
+.acc-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;}
+.badge-terra{background:#fef0e8;color:var(--terra);border:1px solid #f5c8a8;}
+.badge-sage{background:#e8f5ec;color:var(--sage);border:1px solid #b8dfc4;}
+.badge-amber{background:#fef3e2;color:#9a6010;border:1px solid #f5d89a;}
+.badge-lav{background:#f0edf8;color:var(--lavender);border:1px solid #d4cdf0;}
+
+/* ── ROADMAP ───────────────────────────────────────── */
+.rm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.rm{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:22px;box-shadow:0 2px 10px var(--shadow);position:relative;overflow:hidden;}
+.rm::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--terra);}
+.rm-ph{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
+  color:var(--terra);margin-bottom:4px;}
+.rm-ag{font-size:13px;color:var(--amber);font-weight:700;margin-bottom:12px;}
+.rm h3{font-size:16px;font-weight:800;color:var(--ink2);margin-bottom:14px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);}
+.rm ul{list-style:none;padding:0;}
+.rm ul li{font-size:13px;color:var(--muted);padding:6px 0 6px 18px;position:relative;line-height:1.5;border-bottom:1px solid var(--cream2);}
+.rm ul li:last-child{border:none;}
+.rm ul li::before{content:'→';position:absolute;left:0;color:var(--terra);}
+
+/* ── ACTIVITIES ────────────────────────────────────── */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.fb{background:var(--card);border:1.5px solid var(--border);border-radius:20px;
+  padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);transition:.15s;}
+.fb:hover{border-color:var(--terra);color:var(--terra);}
+.fb.on{background:var(--terra);border-color:var(--terra);color:#fff;}
+.act-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.act{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:20px;box-shadow:0 2px 8px var(--shadow);transition:.2s;}
+.act:hover{border-color:var(--terra);transform:translateY(-2px);}
+.act-em{font-size:28px;margin-bottom:10px;}
+.act h3{font-size:14px;font-weight:800;color:var(--ink2);margin-bottom:7px;}
+.act p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:10px;}
+.act-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.atag{font-size:11px;background:var(--cream2);border:1px solid var(--border);
+  color:var(--muted);border-radius:10px;padding:2px 8px;font-weight:500;}
+
+/* ── MUSLIM SECTION ────────────────────────────────── */
+.muslim-wrap{
+  background:linear-gradient(150deg,#1a2e1a 0%,#0f2318 50%,#162a20 100%);
+  border-radius:20px;overflow:hidden;
+}
+.muslim-header{padding:36px 36px 0;}
+.muslim-header .eyebrow{color:#7ecb9a;}
+.muslim-header h2{color:#e8f5ec;}
+.muslim-header .sub{color:#80a896;}
+.muslim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:rgba(255,255,255,.05);}
+.mc{background:rgba(15,35,25,.7);padding:24px;transition:.15s;}
+.mc:hover{background:rgba(20,45,30,.8);}
+.mc-icon{font-size:26px;margin-bottom:12px;}
+.mc h3{font-size:14px;font-weight:800;color:#b8e8cc;margin-bottom:8px;}
+.mc p{font-size:13px;color:#6b9a80;line-height:1.6;}
+
+/* ── DISCOUNTS ─────────────────────────────────────── */
+.disc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.disc{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:20px;box-shadow:0 2px 8px var(--shadow);}
+.disc h3{font-size:14px;font-weight:800;color:var(--ink2);margin-bottom:7px;}
+.disc p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:10px;}
+.disc a{font-size:12px;color:var(--terra);text-decoration:none;font-weight:600;}
+.disc a:hover{text-decoration:underline;}
+
+/* ── CHECKLIST ─────────────────────────────────────── */
+.cl-progress{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;margin-bottom:22px;box-shadow:0 2px 8px var(--shadow);}
+.clp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.clp-label{font-size:14px;font-weight:800;color:var(--ink2);}
+.clp-count{font-size:13px;color:var(--muted);}
+.clp-track{background:var(--cream2);border-radius:4px;height:8px;overflow:hidden;}
+.clp-fill{height:100%;background:linear-gradient(90deg,var(--sage),#6db882);border-radius:4px;transition:width .4s;}
+.cl-cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.clg{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:0 2px 8px var(--shadow);}
+.clg h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--muted);margin-bottom:14px;}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--cream2);}
+.cl-item:last-child{border:none;}
+.cl-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--sage);flex-shrink:0;margin-top:2px;cursor:pointer;}
+.cl-item label{font-size:13px;color:var(--ink2);cursor:pointer;line-height:1.4;}
+.cl-item.done label{text-decoration:line-through;color:var(--light);}
+.reset-cl{background:var(--cream2);border:1px solid var(--border);border-radius:8px;
+  color:var(--muted);font-size:13px;padding:8px 18px;cursor:pointer;margin-top:16px;transition:.15s;}
+.reset-cl:hover{border-color:var(--rust);color:var(--rust);}
+
+/* ── SOURCES ───────────────────────────────────────── */
+.src-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
+.src{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;display:flex;align-items:center;gap:12px;transition:.15s;}
+.src:hover{border-color:var(--terra);}
+.src-n{width:26px;height:26px;background:var(--cream2);border:1px solid var(--border);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
+  color:var(--terra);flex-shrink:0;}
+.src a{font-size:13px;color:var(--ink2);text-decoration:none;font-weight:500;}
+.src a:hover{color:var(--terra);}
+.disclaimer{background:var(--cream2);border:1px solid var(--border);border-radius:12px;
+  padding:18px 22px;font-size:12px;color:var(--muted);margin-top:24px;line-height:1.7;}
+
+/* ── FOOTER ────────────────────────────────────────── */
+footer{background:var(--ink);color:rgba(255,255,255,.55);border-top:1px solid rgba(255,255,255,.08);}
+.footer-inner{max-width:1100px;margin:0 auto;padding:32px 24px;}
+.footer-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
+.footer-brand{font-size:18px;font-weight:800;color:#fff;}
+.footer-brand span{color:var(--terra);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;transition:.15s;}
+.footer-links a:hover{color:rgba(255,255,255,.9);}
+.footer-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:20px 0;}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.35);}
+
+/* ── DEVELOPER SPECS TOGGLE ────────────────────────── */
+.devspecs-toggle{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.5);
+  cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;}
+.devspecs-toggle:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);}
+.devspecs-toggle .ds-arrow{transition:.2s;}
+.devspecs-toggle.open .ds-arrow{transform:rotate(180deg);}
+.devspecs-panel{display:none;margin-top:16px;background:#0a0f18;border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:20px 24px;font-family:'Courier New',Courier,monospace;}
+.devspecs-panel.show{display:block;}
+.ds-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+  color:rgba(255,255,255,.3);margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.07);padding-bottom:10px;}
+.ds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.ds-field{border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:12px 14px;}
+.ds-key{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.3);margin-bottom:6px;}
+.ds-val{font-size:13px;color:#7dd3fc;font-weight:600;line-height:1.4;}
+.ds-val.green{color:#6ee7b7;}
+.ds-val.amber{color:#fcd34d;}
+.ds-val.terra{color:#fca882;}
+.ds-meta{font-size:11px;color:rgba(255,255,255,.2);margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:10px;}
+
+/* ── CHATBOT ───────────────────────────────────────── */
+#chatFab{position:fixed;bottom:24px;right:24px;width:54px;height:54px;
+  background:linear-gradient(135deg,var(--terra),var(--amber));
+  border:none;border-radius:50%;font-size:22px;cursor:pointer;z-index:300;
+  box-shadow:0 4px 20px rgba(196,99,58,.4);transition:.15s;}
+#chatFab:hover{transform:scale(1.08);}
+#chatWin{position:fixed;bottom:90px;right:24px;width:340px;max-height:480px;
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  display:none;flex-direction:column;z-index:300;
+  box-shadow:0 8px 40px rgba(90,55,20,.2);}
+#chatWin.open{display:flex;}
+.cw-head{padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;}
+.cw-avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--terra),var(--amber));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.cw-name{flex:1;font-size:14px;font-weight:800;color:var(--ink2);}
+.cw-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;}
+#cwMsgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0;}
+.cwm{max-width:85%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.5;}
+.cwm.bot{background:var(--cream2);color:var(--ink2);align-self:flex-start;border-radius:4px 12px 12px 12px;}
+.cwm.user{background:var(--terra);color:#fff;align-self:flex-end;border-radius:12px 12px 4px 12px;}
+.cw-suggests{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;}
+.cws{background:var(--cream2);border:1px solid var(--border);border-radius:14px;
+  color:var(--terra);font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;transition:.15s;}
+.cws:hover{background:var(--terra);color:#fff;border-color:var(--terra);}
+.cw-row{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);}
+#cwInput{flex:1;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;
+  color:var(--ink);font-size:13px;padding:9px 12px;}
+#cwInput:focus{outline:none;border-color:var(--terra);}
+#cwSend{background:var(--terra);border:none;border-radius:10px;color:#fff;
+  padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────── -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo-mark">🌅</div>
+    <span class="nav-brand-name">Retire<span>Hub</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#map">Map</a>
+    <a href="#milestones">Milestones</a>
+    <a href="#calc">Calculator</a>
+    <a href="#ages">Ages</a>
+    <a href="#medicare">Medicare</a>
+    <a href="#accounts">Accounts</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#activities">Activities</a>
+    <a href="#muslim">Muslim Plan</a>
+    <a href="#discounts">Discounts</a>
+    <a href="#checklist">Checklist</a>
+    <a href="#sources">Sources</a>
+  </div>
+  <button class="nav-pill" onclick="scrollTo({top:document.getElementById('calc').offsetTop-70,behavior:'smooth'})">Calculator →</button>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">🌅 2026 Edition &nbsp;·&nbsp; Official Sources &nbsp;·&nbsp; Interactive Tools</div>
+      <h1>Your next chapter<br>deserves to be<br><em>extraordinary.</em></h1>
+      <p class="hero-sub">Plain-English retirement guidance covering Social Security, Medicare, 401(k)s, safe withdrawal, a 10-year roadmap, and Muslim planning — all in one warm, human place.</p>
+      <div class="hero-btns">
+        <a class="btn-terra" href="#calc">Run My Calculator</a>
+        <a class="btn-ghost" href="#milestones">View Milestones</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">67</div><div class="hstat-lbl">Full Retirement Age<br>(born 1960+)</div></div>
+      <div class="hstat"><div class="hstat-val">8%</div><div class="hstat-lbl">SS Annual Delay<br>Credit per Year</div></div>
+      <div class="hstat"><div class="hstat-val">$31K</div><div class="hstat-lbl">401(k) Limit<br>age 50+ in 2025</div></div>
+      <div class="hstat"><div class="hstat-val">73</div><div class="hstat-lbl">RMD Start Age<br>(SECURE 2.0)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DECISION MAP ──────────────────────────────────── -->
+<section id="map">
+  <div class="section-wrap">
+    <div class="eyebrow">Start Here</div>
+    <h2>Five Questions to Separate</h2>
+    <p class="sub">Retirement isn't one decision — it's five overlapping ones. Knowing which question you're asking prevents costly mix-ups.</p>
+    <div class="dm-grid">
+      <div class="dm-card"><div class="dm-num">1</div><h3>When to stop working</h3><p>No single U.S. retirement age. Work, health, savings, and employer benefits drive this personal date.</p></div>
+      <div class="dm-card"><div class="dm-num">2</div><h3>When to claim benefits</h3><p>Social Security can start at 62, FRA is 66–67, and delaying can increase benefits up to age 70.</p></div>
+      <div class="dm-card"><div class="dm-num">3</div><h3>How to cover healthcare</h3><p>Medicare typically begins at 65, but enrollment timing and employer coverage change what makes sense.</p></div>
+      <div class="dm-card"><div class="dm-num">4</div><h3>How to draw income</h3><p>401(k), IRA, pension, Social Security, and part-time work each have different tax and flexibility tradeoffs.</p></div>
+      <div class="dm-card"><div class="dm-num">5</div><h3>How to protect the family</h3><p>Spousal benefits, survivor benefits, beneficiary forms, powers of attorney, and fraud prevention matter as much as balances.</p></div>
+    </div>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ── MILESTONES ────────────────────────────────────── -->
+<div class="alt-bg">
+<section id="milestones">
+  <div class="section-wrap">
+    <div class="eyebrow">Age Milestones</div>
+    <h2>Key Ages Worth Knowing</h2>
+    <p class="sub">Every age unlocks new financial or healthcare benefits. Click any milestone to read the details and strategy tips.</p>
+    <div class="ms-list" id="msList"></div>
+  </div>
+</section>
+</div>
+<hr class="sep">
+
+<!-- ── CALCULATOR ────────────────────────────────────── -->
+<section id="calc">
+  <div class="section-wrap">
+    <div class="eyebrow">Interactive Tool</div>
+    <h2>Retirement Readiness Calculator</h2>
+    <p class="sub">Fill in your numbers and get a personalized projection — readiness score, nest egg, savings gap, and a portfolio growth chart.</p>
+    <div class="calc-outer">
+      <div class="calc-header">
+        <h3>Your Retirement Plan</h3>
+        <p>All figures are estimates for planning purposes only.</p>
+      </div>
+      <div class="calc-body">
+        <div class="input-grid">
+          <div class="ifield"><label>Current Age</label><input type="number" id="cAge" value="40" min="18" max="80"></div>
+          <div class="ifield"><label>Retirement Age</label><input type="number" id="rAge" value="65" min="40" max="85"></div>
+          <div class="ifield"><label>Life Expectancy</label><input type="number" id="lExp" value="90" min="65" max="110"></div>
+          <div class="ifield"><label>Current Savings</label><div class="iw"><span class="ipre">$</span><input type="number" id="cSav" value="120000" min="0"></div></div>
+          <div class="ifield"><label>Monthly Contribution</label><div class="iw"><span class="ipre">$</span><input type="number" id="mCon" value="1500" min="0"></div></div>
+          <div class="ifield"><label>Annual Salary</label><div class="iw"><span class="ipre">$</span><input type="number" id="sal" value="90000" min="0"></div></div>
+          <div class="ifield"><label>Employer Match</label><div class="rrow"><input type="range" id="eMatch" min="0" max="10" step="0.5" value="3" oninput="rv('eMatch','eMatchV','%')"><span class="rv" id="eMatchV">3%</span></div></div>
+          <div class="ifield"><label>Pre-Retirement Return</label><div class="rrow"><input type="range" id="preR" min="1" max="14" step="0.5" value="7" oninput="rv('preR','preRV','%')"><span class="rv" id="preRV">7%</span></div></div>
+          <div class="ifield"><label>Post-Retirement Return</label><div class="rrow"><input type="range" id="postR" min="1" max="10" step="0.5" value="5" oninput="rv('postR','postRV','%')"><span class="rv" id="postRV">5%</span></div></div>
+          <div class="ifield"><label>Inflation Rate</label><div class="rrow"><input type="range" id="infl" min="1" max="8" step="0.25" value="3" oninput="rv('infl','inflV','%')"><span class="rv" id="inflV">3%</span></div></div>
+          <div class="ifield"><label>Desired Monthly Income (today's $)</label><div class="iw"><span class="ipre">$</span><input type="number" id="dInc" value="5000" min="0"></div></div>
+          <div class="ifield"><label>Social Security (monthly est.)</label><div class="iw"><span class="ipre">$</span><input type="number" id="ss" value="1800" min="0"></div></div>
+          <div class="ifield"><label>Other Income (pension etc.)</label><div class="iw"><span class="ipre">$</span><input type="number" id="oth" value="0" min="0"></div></div>
+          <div class="ifield"><label>Lifestyle Goal</label><select id="lifestyle"><option value="0.85">Modest (85% replacement)</option><option value="1" selected>Comfortable (100%)</option><option value="1.15">Travel-focused (115%)</option><option value="1.3">Premium (130%)</option></select></div>
+        </div>
+        <button class="run-btn" onclick="runCalc()">🔄 Generate My Retirement Plan</button>
+      </div>
+      <div class="calc-results" id="calcResults">
+        <div class="score-panel">
+          <div class="sp-top"><span class="sp-label">Retirement Readiness Score</span><span class="sp-pct" id="sPct">—</span></div>
+          <div class="bar-track"><div class="bar-fill" id="sBar" style="width:0"></div></div>
+          <p class="sp-msg" id="sMsg"></p>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi k1"><div class="kpi-l">Projected Nest Egg</div><div class="kpi-v" id="kNest">—</div><div class="kpi-s">at retirement</div></div>
+          <div class="kpi k2"><div class="kpi-l">Years Funded</div><div class="kpi-v" id="kYrs">—</div><div class="kpi-s" id="kYrsSub">at target</div></div>
+          <div class="kpi k3"><div class="kpi-l">Portfolio Draw/Mo</div><div class="kpi-v" id="kDraw">—</div><div class="kpi-s">needed from savings</div></div>
+          <div class="kpi k4"><div class="kpi-l">Gap / Surplus</div><div class="kpi-v" id="kGap">—</div><div class="kpi-s" id="kGapSub">vs. target</div></div>
+        </div>
+        <div class="chart-box"><canvas id="growthCanvas"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ── AGE COMPARISON ────────────────────────────────── -->
+<div class="alt-bg">
+<section id="ages">
+  <div class="section-wrap">
+    <div class="eyebrow">Timing Trade-offs</div>
+    <h2>Should You Retire Early?</h2>
+    <p class="sub">Compare common retirement ages and understand the real tradeoffs across healthcare, Social Security, and daily freedom.</p>
+    <div class="age-tabs" id="ageTabs"></div>
+    <div id="agePanel"></div>
+  </div>
+</section>
+</div>
+<hr class="sep">
+
+<!-- ── MEDICARE ──────────────────────────────────────── -->
+<section id="medicare">
+  <div class="section-wrap">
+    <div class="eyebrow">Healthcare at 65+</div>
+    <h2>Medicare Coverage Choices</h2>
+    <p class="sub">Medicare is the main federal health program for people 65+. The two main tracks have very different cost structures, provider access, and flexibility.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Original Medicare (Part A + B + D + Medigap)</th><th>Medicare Advantage (Part C)</th></tr></thead>
+        <tbody>
+          <tr><td>Provider Access</td><td class="yes">Any doctor who accepts Medicare</td><td class="ok">Usually limited to plan network</td></tr>
+          <tr><td>Out-of-Pocket Cap</td><td class="no">No built-in cap without Medigap</td><td class="yes">Annual limit on covered services</td></tr>
+          <tr><td>Drug Coverage</td><td class="ok">Separate Part D plan required</td><td class="yes">Usually bundled in plan</td></tr>
+          <tr><td>Dental / Vision / Hearing</td><td class="no">Not covered by Original Medicare</td><td class="ok">Some plans include extras</td></tr>
+          <tr><td>Switching Later</td><td class="yes">Flexible; Medigap may need underwriting</td><td class="ok">Plans change annually; Medigap return may need underwriting</td></tr>
+          <tr><td>Travel Coverage</td><td class="yes">Works nationwide</td><td class="no">May be limited to plan area</td></tr>
+          <tr><td>Premium Structure</td><td class="ok">Part B (~$175/mo) + Part D + Medigap</td><td class="ok">Often low/$0 premium, but cost-sharing varies</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="med-warning">⚠️ Coverage gap: Original Medicare does not cover most long-term care, routine dental, routine vision, or hearing aids. Plan for those costs separately. <a href="https://www.medicare.gov/providers-services/original-medicare/not-covered" target="_blank" style="color:var(--rust)">Medicare.gov source →</a></div>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ── ACCOUNTS ──────────────────────────────────────── -->
+<div class="alt-bg">
+<section id="accounts">
+  <div class="section-wrap">
+    <div class="eyebrow">Education Center</div>
+    <h2>Retirement Account Types</h2>
+    <p class="sub">Each account has different tax treatment, contribution limits, and withdrawal rules. Understanding the differences is essential for a smart drawdown strategy.</p>
+    <div class="acc-grid">
+      <div class="acc"><div class="acc-icon">🏦</div><h3>401(k) / 403(b)</h3><p>Employer-sponsored. Pre-tax contributions reduce taxable income now. Taxed on withdrawal. Employer match is essentially free money — capture it first.</p><span class="acc-badge badge-terra">2025 limit: $23,500 (+$7,500 if 50+)</span></div>
+      <div class="acc"><div class="acc-icon">📘</div><h3>Traditional IRA</h3><p>May offer tax-deductible contributions depending on income. Good complement to a 401(k). Required Minimum Distributions begin at 73.</p><span class="acc-badge badge-terra">2025 limit: $7,000 (+$1,000 if 50+)</span></div>
+      <div class="acc"><div class="acc-icon">🌱</div><h3>Roth IRA</h3><p>After-tax contributions — qualified withdrawals in retirement are completely tax-free. No RMDs during your lifetime. Best if you expect higher taxes in retirement.</p><span class="acc-badge badge-sage">Tax-free growth &amp; withdrawals</span></div>
+      <div class="acc"><div class="acc-icon">🏥</div><h3>HSA</h3><p>Triple tax advantage: deductible contributions, tax-free growth, tax-free medical withdrawals. After 65, can withdraw for any purpose (taxed like IRA).</p><span class="acc-badge badge-lav">Triple tax advantage</span></div>
+      <div class="acc"><div class="acc-icon">📈</div><h3>Brokerage Account</h3><p>No contribution limits. No tax advantages, but long-term gains taxed at lower capital gains rates. Excellent for bridging retirement income before 59½.</p><span class="acc-badge badge-amber">Flexible, no limits</span></div>
+      <div class="acc"><div class="acc-icon">📜</div><h3>Annuities</h3><p>Insurance products providing guaranteed income stream. Useful for covering fixed expenses but fees and terms vary widely — read every contract detail carefully.</p><span class="acc-badge badge-amber">Guaranteed income — read fine print</span></div>
+    </div>
+  </div>
+</section>
+</div>
+<hr class="sep">
+
+<!-- ── ROADMAP ────────────────────────────────────────── -->
+<section id="roadmap">
+  <div class="section-wrap">
+    <div class="eyebrow">10-Year Plan</div>
+    <h2>Your Roadmap to Retirement</h2>
+    <p class="sub">Four focused phases for the experienced professional building toward their next chapter — from financial foundation to full freedom.</p>
+    <div class="rm-grid">
+      <div class="rm"><div class="rm-ph">Phase 1</div><div class="rm-ag">Ages 50–52 · Years 1–2</div><h3>Foundation &amp; Discovery</h3><ul><li>List every retirement account: balance, type, beneficiary</li><li>Maximize 401(k) including catch-up ($31,000/yr total)</li><li>Open Roth IRA if income-eligible; start conversion strategy if not</li><li>Run SSA.gov benefit estimate — check both spouses' records</li><li>Build 12-month emergency fund separate from retirement</li></ul></div>
+      <div class="rm"><div class="rm-ph">Phase 2</div><div class="rm-ag">Ages 53–55 · Years 3–5</div><h3>Accelerate &amp; De-Risk</h3><ul><li>Shift portfolio allocation gradually toward bonds</li><li>Pay down high-interest debt; set mortgage payoff timeline</li><li>Explore part-time or consulting income streams</li><li>Evaluate long-term care insurance while rates are lower</li><li>Draft or update will, power of attorney, and healthcare proxy</li></ul></div>
+      <div class="rm"><div class="rm-ph">Phase 3</div><div class="rm-ag">Ages 56–58 · Years 6–8</div><h3>Transition &amp; Position</h3><ul><li>Run Social Security breakeven analysis — decide when each spouse claims</li><li>Model healthcare bridge plan from retirement to Medicare at 65</li><li>Practice living on your retirement budget for 6 months</li><li>Consider Roth conversions in lower-income years to reduce future RMDs</li><li>Meet with a fee-only financial planner for a full income plan</li></ul></div>
+      <div class="rm"><div class="rm-ph">Phase 4</div><div class="rm-ag">Ages 59–60 · Years 9–10</div><h3>Launch &amp; Freedom</h3><ul><li>At 59½: penalty-free access to all accounts — full financial inventory</li><li>Finalize retirement date; negotiate a graceful exit with employer</li><li>Set up income streams: SS, portfolio withdrawals, consulting</li><li>Activate ACA marketplace, COBRA, or spouse's plan as bridge</li><li>Write your Retirement Mission Statement — purpose matters</li></ul></div>
+    </div>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ── ACTIVITIES ─────────────────────────────────────── -->
+<div class="alt-bg">
+<section id="activities">
+  <div class="section-wrap">
+    <div class="eyebrow">Retirement Living</div>
+    <h2>Activities That Feed the Soul</h2>
+    <p class="sub">Retirement isn't the end of contribution — it's the beginning of intentional living. Filter by what matters most to you.</p>
+    <div class="filter-bar" id="actFilters">
+      <div class="fb on" onclick="filterAct('all',this)">All</div>
+      <div class="fb" onclick="filterAct('travel',this)">✈️ Travel</div>
+      <div class="fb" onclick="filterAct('giving',this)">🤲 Giving Back</div>
+      <div class="fb" onclick="filterAct('social',this)">🤝 Social</div>
+      <div class="fb" onclick="filterAct('income',this)">💼 Part-Time Income</div>
+      <div class="fb" onclick="filterAct('family',this)">❤️ Family</div>
+    </div>
+    <div class="act-grid" id="actGrid"></div>
+  </div>
+</section>
+</div>
+<hr class="sep">
+
+<!-- ── MUSLIM SECTION ─────────────────────────────────── -->
+<section id="muslim">
+  <div class="section-wrap">
+    <div class="muslim-wrap">
+      <div class="muslim-header" style="padding:36px 36px 28px;">
+        <div class="eyebrow" style="color:#7ecb9a;">Special Guidance</div>
+        <h2 style="color:#e8f5ec;">For Muslim Retirees in the US</h2>
+        <p class="sub" style="color:#80a896;margin-bottom:0;">Islam has a rich tradition of purposeful living, community, and stewardship at every stage of life. These planning considerations are tailored for the Muslim community.</p>
+      </div>
+      <div class="muslim-grid" id="muslimGrid"></div>
+    </div>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ── DISCOUNTS ──────────────────────────────────────── -->
+<div class="alt-bg">
+<section id="discounts">
+  <div class="section-wrap">
+    <div class="eyebrow">Often Missed Benefits</div>
+    <h2>Retirement Discounts &amp; Benefits</h2>
+    <p class="sub">Many programs go unclaimed each year. Verify every benefit before making plans — terms change and eligibility varies.</p>
+    <div class="filter-bar" id="discFilters">
+      <div class="fb on" onclick="filterDisc('all',this)">All</div>
+      <div class="fb" onclick="filterDisc('travel',this)">Travel</div>
+      <div class="fb" onclick="filterDisc('tax',this)">Tax &amp; Housing</div>
+      <div class="fb" onclick="filterDisc('health',this)">Healthcare</div>
+      <div class="fb" onclick="filterDisc('local',this)">Local Services</div>
+    </div>
+    <div class="disc-grid" id="discGrid"></div>
+  </div>
+</section>
+</div>
+<hr class="sep">
+
+<!-- ── CHECKLIST ──────────────────────────────────────── -->
+<section id="checklist">
+  <div class="section-wrap">
+    <div class="eyebrow">Action Plan</div>
+    <h2>Retirement Planning Checklist</h2>
+    <p class="sub">Check off items as you gather them. Track your progress toward a complete retirement picture.</p>
+    <div class="cl-progress">
+      <div class="clp-top"><span class="clp-label">Your Progress</span><span class="clp-count" id="clCount">0 of 20 items</span></div>
+      <div class="clp-track"><div class="clp-fill" id="clFill" style="width:0%"></div></div>
+    </div>
+    <div class="cl-cols" id="clCols"></div>
+    <button class="reset-cl" onclick="resetCl()">↻ Reset Checklist</button>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ── SOURCES ────────────────────────────────────────── -->
+<div class="alt-bg">
+<section id="sources">
+  <div class="section-wrap">
+    <div class="eyebrow">Verification</div>
+    <h2>Official Sources Cited</h2>
+    <p class="sub">Source review date: May 2026. Verify current rules directly with official agencies before making any decisions — regulations change.</p>
+    <div class="src-grid" id="srcGrid"></div>
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> This site is for informational and educational purposes only. Nothing here constitutes financial, retirement, tax, legal, or investment advice. Summaries reflect publicly available government rules and general information — they do not account for your personal circumstances, work history, health, income, family situation, or state-specific rules. Before making any decision about Social Security, Medicare, retirement accounts, or related benefits, consult a qualified financial advisor, tax professional, or attorney and verify rules directly with the relevant government agency.
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <span class="footer-brand">Retire<span>Hub</span></span>
+      <div class="footer-links">
+        <a href="#map">Decision Map</a>
+        <a href="#milestones">Milestones</a>
+        <a href="#calc">Calculator</a>
+        <a href="#medicare">Medicare</a>
+        <a href="#muslim">Muslim Plan</a>
+        <a href="#sources">Sources</a>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 RetireHub · For educational reference only · All information sourced from official U.S. government agencies</span>
+      <button class="devspecs-toggle" id="dsBtn" onclick="toggleDevSpecs()">
+        ⚙ Developer Specs <span class="ds-arrow">▾</span>
+      </button>
+    </div>
+    <!-- DEVELOPER SPECS PANEL -->
+    <div class="devspecs-panel" id="dsPanel">
+      <div class="ds-header">AI Metadata — Generation Log</div>
+      <div class="ds-grid">
+        <div class="ds-field">
+          <div class="ds-key">LLM Engine</div>
+          <div class="ds-val terra">Claude Sonnet 4.6<br><span style="font-size:11px;color:rgba(255,255,255,.3);">claude-sonnet-4-6</span></div>
+        </div>
+        <div class="ds-field">
+          <div class="ds-key">Estimated Input Tokens</div>
+          <div class="ds-val">~68,400 tokens<br><span style="font-size:11px;color:rgba(255,255,255,.3);">System prompt + conversation + web fetches</span></div>
+        </div>
+        <div class="ds-field">
+          <div class="ds-key">Estimated Output Tokens</div>
+          <div class="ds-val">~26,200 tokens<br><span style="font-size:11px;color:rgba(255,255,255,.3);">HTML, CSS, JS across all iterations</span></div>
+        </div>
+        <div class="ds-field">
+          <div class="ds-key">Prompt Architecture</div>
+          <div class="ds-val green">Multi-step Pipeline<br><span style="font-size:11px;color:rgba(255,255,255,.3);">utilizing Context Isolation</span></div>
+        </div>
+        <div class="ds-field">
+          <div class="ds-key">Execution Timestamp</div>
+          <div class="ds-val amber">Year 2026<br><span style="font-size:11px;color:rgba(255,255,255,.3);">Cowork Mode · Claude Desktop App</span></div>
+        </div>
+        <div class="ds-field">
+          <div class="ds-key">Generation Method</div>
+          <div class="ds-val">Single-file HTML<br><span style="font-size:11px;color:rgba(255,255,255,.3);">Inline CSS + Vanilla JS + Chart.js CDN</span></div>
+        </div>
+      </div>
+      <div class="ds-meta">Token estimates are approximations based on session context volume. Actual counts vary by tokenizer. Content sourced from 4 reference sites and 18 official U.S. government agencies. No external APIs called at runtime — fully client-side.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- CHATBOT -->
+<button id="chatFab" onclick="toggleChat()" title="Ask RetireAI">🤖</button>
+<div id="chatWin">
+  <div class="cw-head">
+    <div class="cw-avatar">🤖</div>
+    <span class="cw-name">RetireAI</span>
+    <button class="cw-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="cwMsgs">
+    <div class="cwm bot">👋 Hi! I'm RetireAI. Ask me anything — Social Security, Medicare, 401(k) rules, RMDs, halal investing, or anything else about US retirement planning.</div>
+  </div>
+  <div class="cw-suggests">
+    <button class="cws" onclick="askBot('Social Security at 62 vs 67?')">SS 62 vs 67?</button>
+    <button class="cws" onclick="askBot('What is the 4% rule?')">4% rule?</button>
+    <button class="cws" onclick="askBot('What is Rule of 55?')">Rule of 55?</button>
+    <button class="cws" onclick="askBot('Roth vs Traditional?')">Roth vs Trad?</button>
+    <button class="cws" onclick="askBot('What are RMDs?')">RMDs?</button>
+    <button class="cws" onclick="askBot('Halal investing?')">Halal investing?</button>
+  </div>
+  <div class="cw-row">
+    <input id="cwInput" placeholder="Ask a retirement question..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button id="cwSend" onclick="sendChat()">Send</button>
+  </div>
+</div>
+
+<!-- ── JAVASCRIPT ─────────────────────────────────────── -->
+<script>
+// ── RANGE DISPLAY
+function rv(id,vid,sfx){document.getElementById(vid).textContent=parseFloat(document.getElementById(id).value).toFixed(2).replace(/\.?0+$/,'')+sfx;}
+
+// ── DEV SPECS
+function toggleDevSpecs(){
+  const btn=document.getElementById('dsBtn');
+  const panel=document.getElementById('dsPanel');
+  btn.classList.toggle('open');
+  panel.classList.toggle('show');
+}
+
+// ── MILESTONES DATA
+const msData=[
+  {age:'50',lbl:'Catch-Up Savings',title:'Catch-Up Contributions Begin',short:'401(k) & IRA catch-up savings unlock',
+   body:'At 50, the IRS allows higher annual contribution limits — "catch-up contributions." In 2025 you can contribute an extra <strong>$7,500</strong> to a 401(k) (total $31,000) and an extra $1,000 to an IRA (total $8,000).',
+   tags:[{t:'401(k) catch-up: +$7,500',c:'g'},{t:'IRA catch-up: +$1,000',c:'g'},{t:'Verify with IRS — limits change yearly',c:'a'}],
+   tip:'Strategy: If you started saving late, ages 50–65 are your highest-leverage catch-up window. Maximize both your 401(k) and IRA every single year.'},
+  {age:'55',lbl:'Rule of 55',title:'Rule of 55 — Early 401(k) Access',short:'Penalty-free 401(k) from most recent employer',
+   body:'If you leave your employer in the year you turn 55 (or later), the IRS allows penalty-free withdrawals from that employer\'s 401(k) or 403(b) without waiting until 59½. Withdrawals are still subject to ordinary income tax. Does <strong>not</strong> apply to IRAs.',
+   tags:[{t:'No 10% early penalty',c:'g'},{t:'Still taxed as income',c:'r'},{t:'Applies to current employer only',c:'r'},{t:'Public safety workers: age 50',c:'a'}],
+   tip:'Strategy: If planning to retire at 55–59, keep savings in your most recent employer\'s 401(k) rather than rolling into an IRA — or you lose Rule of 55 access.'},
+  {age:'59½',lbl:'Penalty Ends',title:'Penalty-Free Withdrawals from All Accounts',short:'10% early withdrawal penalty ends for all tax-advantaged accounts',
+   body:'The IRS 10% early-withdrawal penalty lifts for <strong>all</strong> tax-advantaged accounts — 401(k), 403(b), Traditional IRA, SEP-IRA, and SIMPLE IRA. Roth IRA earnings become tax-free at 59½ if the account is 5+ years old.',
+   tags:[{t:'Penalty ends — all account types',c:'g'},{t:'Traditional accounts still taxed',c:'r'},{t:'Roth earnings tax-free (5yr rule)',c:'g'}],
+   tip:'This is often the most practical earliest retirement age for people with IRAs and multiple old 401(k) accounts from prior employers.'},
+  {age:'62',lbl:'Social Security',title:'Earliest Social Security Claim',short:'Benefits available but permanently reduced up to 30%',
+   body:'You can claim Social Security at 62, but monthly benefits are <strong>permanently reduced</strong> — up to 30% compared to Full Retirement Age (67 for those born 1960+). Break-even for waiting 62→67 is typically around age 78–80.',
+   tags:[{t:'Earliest eligible age',c:'a'},{t:'Up to 30% permanent reduction',c:'r'},{t:'Creates earlier cash flow',c:'g'}],
+   tip:'Claiming early can make sense for: poor health, urgent cash need, or as part of a household strategy where one spouse claims early and the other delays to 70 to maximize survivor benefits.'},
+  {age:'65',lbl:'Medicare',title:'Medicare Eligibility Begins',short:'Initial Enrollment Period opens — don\'t miss it',
+   body:'Most Americans become eligible for Medicare at 65. Your Initial Enrollment Period starts <strong>3 months before</strong> your birthday month and ends 3 months after. Missing it without other creditable coverage triggers a <strong>10% permanent premium penalty per 12 months delayed</strong> for Part B.',
+   tags:[{t:'Part A: free if 40+ work quarters',c:'g'},{t:'Part B: ~$175/mo standard premium',c:'a'},{t:'Late enrollment = permanent penalty',c:'r'}],
+   tip:'If you\'re still on employer coverage at 65, you can delay Medicare enrollment without penalty while that coverage is active. Coordinate the timing carefully.'},
+  {age:'67',lbl:'Full SS',title:'Full Retirement Age — 100% of SS Benefit',short:'No reduction, no bonus — your full calculated amount',
+   body:'For anyone born in 1960 or later, Full Retirement Age is <strong>67</strong>. Claiming at FRA means 100% of your calculated benefit with no permanent reduction. Delaying past FRA earns Delayed Retirement Credits of roughly <strong>8% per year</strong>, stopping at age 70 (giving you 124% of your FRA benefit).',
+   tags:[{t:'100% of calculated benefit',c:'g'},{t:'+8%/yr for each year you wait',c:'g'},{t:'Maximum at 70 = 124% of FRA',c:'g'}],
+   tip:'Strategy for couples: lower-earning spouse claims at FRA or earlier, higher-earning spouse delays to 70. This maximizes the survivor benefit, which is based on the higher earner\'s record.'},
+  {age:'70',lbl:'Max SS',title:'Maximum Social Security — Delayed Credits Peak',short:'Benefit at 70 = 124% of your FRA amount',
+   body:'Age 70 is the <strong>latest you should delay</strong> Social Security — Delayed Retirement Credits stop accruing here. Especially valuable for high earners and those in good health. Break-even vs. FRA is approximately age 82–83.',
+   tags:[{t:'+24% bonus over FRA benefit',c:'g'},{t:'Credits stop — no gain past 70',c:'r'},{t:'Maximizes survivor benefit for spouse',c:'g'}],
+   tip:'A married couple strategy: lower earner claims at 62, higher earner waits to 70. This maximizes lifetime household income and the survivor benefit left to the surviving spouse.'},
+  {age:'73',lbl:'RMDs',title:'Required Minimum Distributions (RMDs) Begin',short:'Mandatory annual withdrawals — missing them is costly',
+   body:'Under SECURE 2.0 Act, RMDs from traditional 401(k)s and IRAs must begin by April 1 of the year after you turn 73. Missing a required withdrawal triggers a <strong>25% excise tax</strong> on the missed amount. Roth IRAs in your name are exempt. RMD age increases to 75 for those born 1960 or later (starting 2033).',
+   tags:[{t:'25% excise tax on missed RMDs',c:'r'},{t:'Roth IRAs exempt',c:'g'},{t:'RMD age → 75 starting 2033',c:'a'}],
+   tip:'RMDs can push you into a higher tax bracket and raise Medicare IRMAA premiums. Consider doing Roth conversions in lower-income years (50s–early 60s) to reduce your future RMD exposure.'}
+];
+function buildMs(){
+  document.getElementById('msList').innerHTML=msData.map((m,i)=>`
+    <div class="ms">
+      <div class="ms-head" onclick="toggleMs(this,${i})">
+        <div class="ms-badge"><div class="ms-age">${m.age}</div><div class="ms-sublabel">${m.lbl}</div></div>
+        <div class="ms-divider"></div>
+        <div class="ms-info"><h3>${m.title}</h3><p>${m.short}</p></div>
+        <div class="ms-toggle">▾</div>
+      </div>
+      <div class="ms-body" id="msb${i}">
+        <p>${m.body}</p>
+        <div class="tag-row">${m.tags.map(t=>`<span class="tag tag-${t.c}">${t.t}</span>`).join('')}</div>
+        <div class="tip">💡 ${m.tip}</div>
+      </div>
+    </div>`).join('');
+}
+function toggleMs(h,i){
+  h.classList.toggle('open');
+  document.getElementById('msb'+i).classList.toggle('show');
+}
+buildMs();
+
+// ── CALCULATOR
+let growthChart;
+function fmt(n){const a=Math.abs(n),s=n<0?'-':'';return a>=1e6?s+'$'+(a/1e6).toFixed(2)+'M':a>=1e3?s+'$'+(a/1e3).toFixed(1)+'K':s+'$'+Math.round(a).toLocaleString();}
+function yearsLast(p,w,r){let y=0;while(p>0&&y<100){p=p*(1+r)-w;y++;}return p>0?99:y;}
+function runCalc(){
+  const cAge=+v('cAge'),rAge=+v('rAge'),lExp=+v('lExp'),cSav=+v('cSav'),
+        mCon=+v('mCon'),sal=+v('sal'),eMatch=+v('eMatch')/100,
+        preR=+v('preR')/100,postR=+v('postR')/100,infl=+v('infl')/100,
+        dInc=+v('dInc'),ss=+v('ss'),oth=+v('oth'),lf=+v('lifestyle');
+  function v(id){return document.getElementById(id).value;}
+  const ytr=rAge-cAge,yir=lExp-rAge;
+  if(ytr<=0||yir<=0){alert('Check age inputs.');return;}
+  const mMatch=(sal*eMatch)/12,totM=mCon+mMatch,mr=preR/12;
+  let bal=cSav;const bals=[cSav],ages=[cAge];
+  for(let y=1;y<=ytr;y++){for(let m=0;m<12;m++)bal=bal*(1+mr)+totM;bals.push(bal);ages.push(cAge+y);}
+  const nest=bal;
+  const desAnn=dInc*12*lf*Math.pow(1+infl,ytr);
+  const ssAnn=ss*12*Math.pow(1+infl,ytr);
+  const othAnn=oth*12*Math.pow(1+infl,ytr);
+  const pNeed=Math.max(0,desAnn-ssAnn-othAnn);
+  const tgt=postR>0?pNeed*(1-Math.pow(1+postR,-yir))/postR:pNeed*yir;
+  const score=Math.min(100,Math.round(nest/Math.max(tgt,1)*100));
+  const gap=nest-tgt,fundYrs=yearsLast(nest,pNeed,postR);
+  let dbal=nest;const rBals=[nest];
+  for(let y=1;y<=yir;y++){dbal=Math.max(0,dbal*(1+postR)-pNeed);rBals.push(dbal);if(dbal<=0)break;}
+  while(rBals.length<=yir)rBals.push(0);
+  const allL=[...ages,...Array.from({length:yir},(_,i)=>rAge+1+i)];
+  const allB=[...bals,...rBals.slice(1)];
+  const cr=document.getElementById('calcResults');cr.style.display='block';
+  const sc=score>=90?'#4e8a63':score>=70?'#d4893b':'#b84040';
+  document.getElementById('sPct').textContent=score+'%';
+  document.getElementById('sPct').style.color=sc;
+  document.getElementById('sBar').style.width=score+'%';
+  document.getElementById('sBar').style.background=sc;
+  document.getElementById('sMsg').textContent=score>=90?'Excellent! Your projected savings fully cover your retirement needs with room to spare.':score>=70?`You're ${score}% of the way there. Small adjustments — a bit more monthly or retiring slightly later — can close the gap.`:`Your savings cover ${score}% of your target. Increasing contributions or revisiting your spending goals will help significantly.`;
+  document.getElementById('kNest').textContent=fmt(nest);
+  document.getElementById('kYrs').textContent=fundYrs>=99?'∞':fundYrs+' yrs';
+  document.getElementById('kYrsSub').textContent=fundYrs>=yir?'✅ Covers lifetime':'⚠️ Need '+yir+' yrs';
+  document.getElementById('kDraw').textContent=fmt(pNeed/12);
+  document.getElementById('kGap').textContent=(gap>=0?'+':'')+fmt(gap);
+  document.getElementById('kGap').style.color=gap>=0?'var(--sage)':'var(--rust)';
+  document.getElementById('kGapSub').textContent=gap>=0?'📈 Surplus':'📉 Shortfall';
+  const ctx=document.getElementById('growthCanvas').getContext('2d');
+  if(growthChart)growthChart.destroy();
+  growthChart=new Chart(ctx,{type:'line',data:{labels:allL,datasets:[
+    {label:'Portfolio Balance',data:allB,borderColor:'#c4633a',backgroundColor:'rgba(196,99,58,.08)',fill:true,tension:.35,pointRadius:0,borderWidth:2.5},
+    {label:'Retirement Start',data:allL.map((_,i)=>i===ytr?allB[i]:null),borderColor:'#d4893b',backgroundColor:'#d4893b',pointRadius:8,showLine:false}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
+    plugins:{legend:{labels:{color:'#7c6a57',boxWidth:12}},tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+fmt(c.raw)}}},
+    scales:{x:{ticks:{color:'#a8957e',maxTicksLimit:14},grid:{color:'rgba(232,222,206,.5)'}},
+            y:{ticks:{color:'#a8957e',callback:v=>fmt(v)},grid:{color:'rgba(232,222,206,.5)'}}}
+  }});
+  cr.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ── AGE TABS
+const ageD={
+  '55':{title:'Age 55 — Maximum Freedom, Highest Bridge Cost',desc:'Retiring this early creates years of flexibility, but healthcare and income need very careful planning before Medicare and Social Security eligibility.',
+    pros:['Full lifestyle freedom — no employer obligations','Rule of 55 allows 401(k) access from current employer plan','Years ahead to travel, consult, or pursue passion projects'],
+    cons:['No Medicare for 10 years — ACA or COBRA required','Social Security not available for 7+ years — savings must bridge entirely','Portfolio must last 35+ years, raising sequence-of-returns risk'],
+    links:[['ACA retiree coverage','https://www.healthcare.gov/retirees/'],['Rule of 55','https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-exceptions-to-tax-on-early-distributions']]},
+  '59':{title:'Age 59½ — Full Account Access Unlocks',desc:'The most practical earliest retirement age for those with IRAs and multiple old 401(k)s — penalty-free withdrawals open across all account types simultaneously.',
+    pros:['Penalty-free access to all retirement accounts','Roth earnings tax-free if account 5+ years old','Early enough to enjoy active travel and hobbies'],
+    cons:['Still 5.5 years until Medicare eligibility','Social Security before FRA means permanent reduction','Healthcare bridge cost remains a significant ongoing expense'],
+    links:[['IRS distribution rules','https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-tax-on-early-distributions']]},
+  '62':{title:'Age 62 — Earliest Social Security Available',desc:'Social Security becomes available, but benefits are permanently reduced up to 30%. Whether to claim depends heavily on health, cash flow needs, and household strategy.',
+    pros:['Social Security income begins — reduces portfolio drawdown','All retirement accounts penalty-free','Still young and active enough for meaningful travel and engagement'],
+    cons:['SS benefit permanently reduced up to 30% vs FRA','Medicare still 3 years away — healthcare bridge needed','Lifetime SS income lower if you live past break-even (~age 78–80)'],
+    links:[['SSA early benefit reduction','https://www.ssa.gov/benefits/retirement/planner/agereduction.html']]},
+  '65':{title:'Age 65 — Medicare Begins, Healthcare Solved',desc:'Medicare eligibility begins — the expensive healthcare bridge gap disappears. Many retirees find 65 to be the first age where retirement becomes financially clean.',
+    pros:['Medicare Part A & B enrollment — healthcare secured','No more ACA/COBRA bridge premium needed','Social Security still available; many choose to delay for larger benefit'],
+    cons:['Claiming SS at 65 still below FRA — 13% permanent reduction (born 1960+)','Medicare Part B has monthly premium (~$175)','Still need supplemental coverage for dental/vision/hearing'],
+    links:[['Medicare enrollment','https://www.medicare.gov/basics/get-started-with-medicare/sign-up/how-do-i-sign-up-for-medicare']]},
+  '67':{title:'Age 67 — Full Retirement Age, Clean Start',desc:'For those born 1960 or later, FRA is 67. Claiming Social Security yields 100% of your calculated benefit. Medicare is already 2 years established. A low-compromise retirement start.',
+    pros:['100% of calculated Social Security benefit — no permanent reduction','Medicare already established for 2 years','Still young enough to enjoy decades of active retirement'],
+    cons:['Delaying 3 more years to 70 adds 24% more SS income permanently','Fewer active years in retirement compared to claiming at 62 or 65','May need to fund several more working years before this point'],
+    links:[['SSA full retirement age','https://www.ssa.gov/benefits/retirement/planner/ageincrease.html']]},
+  '70':{title:'Age 70 — Maximum Social Security, Best Benefit',desc:'Waiting to 70 unlocks the maximum possible Social Security benefit — 124% of your FRA amount. Ideal for high earners in good health who can afford to delay.',
+    pros:['Maximum SS benefit: 124% of FRA amount','Maximizes survivor benefit for your spouse — critical for couples','Optimal for those who expect to live well into their 80s+'],
+    cons:['Three extra years of working beyond FRA (or living off savings)','Break-even vs. FRA is approximately age 82–83','Requires sufficient other income or savings to bridge until 70'],
+    links:[['SSA delayed retirement credits','https://www.ssa.gov/benefits/retirement/planner/delayret.html']]}
+};
+const ageKeys=['55','59','62','65','67','70'];
+function buildAgeTabs(){
+  document.getElementById('ageTabs').innerHTML=ageKeys.map((k,i)=>`<div class="atab${i===2?' on':''}" onclick="showAge('${k}',this)">${k==='59'?'59½':k}</div>`).join('');
+  showAgeContent('62');
+}
+function showAge(id,el){
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');showAgeContent(id);
+}
+function showAgeContent(id){
+  const d=ageD[id];
+  document.getElementById('agePanel').innerHTML=`
+    <div class="ap-banner">
+      <div class="ap-age-big">${id==='59'?'59½':id}</div>
+      <div><div class="ap-title">${d.title}</div><div class="ap-desc">${d.desc}</div>
+      <div class="ap-links">${d.links.map(l=>`<a href="${l[1]}" target="_blank">${l[0]} →</a>`).join('')}</div></div>
+    </div>
+    <div class="ap-cols">
+      <div class="apc pros"><h4>✅ Advantages</h4><ul>${d.pros.map(p=>`<li>${p}</li>`).join('')}</ul></div>
+      <div class="apc cons"><h4>⚠️ Tradeoffs</h4><ul>${d.cons.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+    </div>`;
+}
+buildAgeTabs();
+
+// ── ACTIVITIES
+const acts=[
+  {cat:'travel',em:'🕋',t:'Annual Umrah & Hajj Planning',d:'Organize group Umrah for community members. Your experience as a prior pilgrim is invaluable. Budget $8,000–$15,000+ per person for Hajj from the US.',tags:['Spiritual','Community','Travel']},
+  {cat:'travel',em:'🌍',t:'Islamic Heritage Group Tours',d:'Guided tours to Andalusia, Ottoman Turkey, Morocco, Jordan, and Egypt — Islamic history as the lens. Partner with your mosque to organize community pilgrimages.',tags:['Culture','Travel','Muslim Heritage']},
+  {cat:'travel',em:'🏞️',t:'National Parks Road Trip',d:'The America the Beautiful Senior Pass (62+) covers entry to 2,000+ federal recreation sites. Plan the ultimate road trip across America\'s most stunning landscapes.',tags:['Outdoors','Budget-Friendly','Adventure']},
+  {cat:'travel',em:'🗺️',t:'Couples World Tour as Group Hosts',d:'Travel globally as a couple — bringing 6–10 friends per trip. As host, you plan logistics and itineraries. Guest fees offset or fully cover your costs.',tags:['Couples','Group Travel','Subsidized']},
+  {cat:'giving',em:'🖥️',t:'IT & Digital Literacy at Your Mosque',d:'Monthly sessions for seniors (smartphone safety, scam awareness) and youth (coding basics, career paths). Be the bridge between your masjid\'s tech needs and the congregation.',tags:['Volunteer','Masjid','Tech Education']},
+  {cat:'giving',em:'🎓',t:'Adjunct Faculty / Community College',d:'Teach 1–2 courses per semester. Pays $4K–$8K per course, keeps your mind sharp, and lets you shape the next generation of professionals.',tags:['Teaching','Income','Legacy']},
+  {cat:'giving',em:'🌱',t:'Mentorship for Young Entrepreneurs',d:'Mentor 2–3 early-stage founders per year through SCORE or informally. Your 25+ years of expertise and network are worth far more than you realize.',tags:['Mentorship','Giving Back','Community']},
+  {cat:'social',em:'♟️',t:'Retiree Mastermind & Investment Club',d:'Form a group of 6–8 retired professionals who meet bi-weekly to share investment ideas, travel plans, and life wisdom. 150+ combined years of experience.',tags:['Investment','Brotherhood','Learning']},
+  {cat:'social',em:'📖',t:'Islamic History Book Club',d:'Lead a monthly book club exploring Islamic civilization and contemporary Muslim thought. Rotate hosting. Invite scholars via Zoom. Feeds both intellect and soul.',tags:['Learning','Islamic Knowledge','Social']},
+  {cat:'social',em:'🏃',t:'Health & Fitness Accountability Group',d:'Organize a weekly walking group, gym partnership, or pickleball club (fastest-growing retiree sport). Add social element — chai after the walk.',tags:['Fitness','Accountability','Wellness']},
+  {cat:'income',em:'🤖',t:'AI Consulting for SMBs & Nonprofits',d:'Consult on AI adoption, IT infrastructure, and cybersecurity for small businesses and Islamic nonprofits. 10–15 hrs/week at $150–$250/hr. Your background opens doors immediately.',tags:['$150-250/hr','Flexible','High Value']},
+  {cat:'income',em:'🌐',t:'Fractional CTO / vCIO',d:'Serve as part-time CTO for 2–3 growing companies. Monthly retainer model ($2K–$5K/client). Senior strategy without their full-time cost.',tags:['Retainer','Leadership','Strategic']},
+  {cat:'income',em:'🎯',t:'Online Courses & YouTube Channel',d:'Create courses teaching AI for IT professionals or your domain expertise. Passive income while you sleep. Your 25+ years makes your content uniquely credible.',tags:['Passive Income','Content','Scalable']},
+  {cat:'family',em:'🎒',t:'Grandparent Adventures Program',d:'Annual "grandparent + grandchild" trips — national parks, Washington D.C., international adventures. These experiences bond generations and plant seeds that last lifetimes.',tags:['Grandchildren','Memories','Education']},
+  {cat:'family',em:'🏡',t:'Home as the Family Hub',d:'Invest in your home as the gathering place — outdoor kitchen, guest room always ready, a dedicated space for family Quran and prayer. Create the memories your grandchildren will carry forever.',tags:['Hosting','Home','Gatherings']}
+];
+function renderActs(cat='all'){
+  const f=cat==='all'?acts:acts.filter(a=>a.cat===cat);
+  document.getElementById('actGrid').innerHTML=f.map(a=>`
+    <div class="act"><div class="act-em">${a.em}</div><h3>${a.t}</h3><p>${a.d}</p>
+    <div class="act-tags">${a.tags.map(t=>`<span class="atag">${t}</span>`).join('')}</div></div>`).join('');
+}
+function filterAct(cat,el){
+  document.querySelectorAll('#actFilters .fb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');renderActs(cat);
+}
+renderActs();
+
+// ── MUSLIM GRID
+const muslimCards=[
+  {i:'📿',t:'Halal Investing & Retirement Accounts',p:'Look for Shariah-compliant fund options in your 401(k). If unavailable, a Self-Directed IRA can invest in halal equities, sukuk (Islamic bonds), or halal REITs. Avoid interest-bearing money market funds as default holdings.'},
+  {i:'🕌',t:'Zakat, Sadaqah & Waqf Planning',p:'Build charitable giving into your retirement budget. Zakat (2.5% of net wealth above nisab) is an annual obligation. Consider a Donor-Advised Fund (DAF) or Waqf (Islamic endowment) to structure ongoing sadaqah jariya — charity that benefits you even after death.'},
+  {i:'🕋',t:'Hajj & Umrah Planning',p:'Hajj is a once-in-lifetime obligation for those physically and financially able. Budget $8,000–$15,000+ per person from the US. Start a dedicated Hajj savings account early. Annual Umrah trips serve as a meaningful spiritual anchor.'},
+  {i:'📜',t:'Islamic Estate Planning (Mirath)',p:'Islamic inheritance law (Faraid) differs from default US intestacy laws. Work with an estate attorney familiar with both systems. Prepare an Islamic will specifying distribution per Quranic guidelines. Review beneficiary forms on all accounts.'},
+  {i:'🌙',t:'Retirement as Ibadah',p:'The Prophet ﷺ said: "Make use of five before five" — including health before sickness and free time before preoccupation. Retirement is an opportunity for deeper worship, Quran learning, teaching, and mentoring — all enduring ibadah.'},
+  {i:'🤝',t:'Mosque-Based Community & Mental Wellness',p:'Isolation is one of the greatest retirement risks. The masjid becomes your social anchor — Fajr in congregation, Friday khutbahs, Ramadan programs, and Eid gatherings structure your week and protect your mental health.'}
+];
+document.getElementById('muslimGrid').innerHTML=muslimCards.map(c=>`
+  <div class="mc"><div class="mc-icon">${c.i}</div><h3>${c.t}</h3><p>${c.p}</p></div>`).join('');
+
+// ── DISCOUNTS
+const discs=[
+  {cat:'travel',t:'National Parks Senior Pass',d:'U.S. citizens and permanent residents 62+ can buy the America the Beautiful Senior Pass — $80 lifetime or $20 annually. Covers entry to 2,000+ federal recreation sites.',href:'https://www.nps.gov/planyourvisit/passes.htm'},
+  {cat:'travel',t:'AARP Travel Discounts',d:'AARP membership ($16/yr, age 50+) unlocks discounts on hotels, rental cars, airlines, and vacation packages through major travel partners.',href:'https://www.aarp.org/travel/'},
+  {cat:'tax',t:'Higher Standard Deduction (65+)',d:'IRS provides a higher standard deduction for people 65+. In 2025 this adds $1,950 (single) or $1,550 (married filing jointly, per eligible spouse) on top of the base deduction.',href:'https://www.irs.gov/individuals/seniors-retirees/tips-for-seniors-in-preparing-their-taxes'},
+  {cat:'tax',t:'Property Tax Exemptions',d:'Most states offer property tax exemptions, freezes, or deferrals for homeowners 65+. Amount and eligibility varies significantly — check your local county assessor.',href:'https://www.usa.gov/approaching-retirement'},
+  {cat:'health',t:'Medicare Savings Programs',d:'Low-income Medicare beneficiaries may qualify for help paying premiums, deductibles, and copays through Medicare Savings Programs (QMB, SLMB, QI). Check eligibility at Medicaid.gov.',href:'https://www.medicaid.gov/medicaid/eligibility/seniors-medicare-and-medicaid-enrollees'},
+  {cat:'health',t:'Extra Help (Part D Subsidy)',d:'Social Security administers the Extra Help program, which can eliminate or reduce Medicare prescription drug plan premiums and copays for eligible lower-income beneficiaries.',href:'https://www.ssa.gov/medicare/part-d-low-income-subsidy'},
+  {cat:'local',t:'Eldercare Locator',d:'Free national resource connecting older adults with local services — meals, home care, transportation, legal aid, and caregiver support wherever you live.',href:'https://eldercare.acl.gov/'},
+  {cat:'local',t:'AARP Foundation Programs',d:'Free tax preparation (AARP Tax-Aide), job placement assistance, hunger relief, and other support programs specifically designed for lower-income adults 50+.',href:'https://www.aarpfoundation.org/'}
+];
+function renderDiscs(cat='all'){
+  const f=cat==='all'?discs:discs.filter(d=>d.cat===cat);
+  document.getElementById('discGrid').innerHTML=f.map(d=>`
+    <div class="disc"><h3>${d.t}</h3><p>${d.d}</p><a href="${d.href}" target="_blank">Official source →</a></div>`).join('');
+}
+function filterDisc(cat,el){
+  document.querySelectorAll('#discFilters .fb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');renderDiscs(cat);
+}
+renderDiscs();
+
+// ── CHECKLIST
+const clData=[
+  {g:'Income & Benefits',items:['SSA.gov — check benefit estimates for all spouses','Pension and annuity statements collected','401(k), IRA, Roth IRA, brokerage statements — all accounts listed','Part-time or consulting income plan documented']},
+  {g:'Healthcare',items:['Medicare enrollment dates confirmed','Employer retiree coverage details reviewed','Prescriptions, doctors, and pharmacies documented','Long-term care plan discussed or insurance in place','Dental, vision, and hearing coverage verified']},
+  {g:'Household Finances',items:['Monthly retirement budget drafted and tested','12-month emergency fund fully funded','All debts listed with payoff timelines','Mortgage payoff target set or home equity plan made']},
+  {g:'Family Protection',items:['Beneficiary forms updated on all retirement accounts','Will drafted and legally signed','Power of Attorney document in place','Healthcare proxy / advance directive signed','Emergency contacts and trusted helper list documented','Passwords plan and account access plan secured']}
+];
+let clState={};
+function buildCl(){
+  const allItems=clData.flatMap(g=>g.items);
+  allItems.forEach((_,i)=>{if(clState[i]===undefined)clState[i]=false;});
+  document.getElementById('clCols').innerHTML=clData.map((g,gi)=>{
+    const off=clData.slice(0,gi).reduce((s,x)=>s+x.items.length,0);
+    return`<div class="clg"><h3>${g.g}</h3>${g.items.map((item,ii)=>{
+      const idx=off+ii;
+      return`<div class="cl-item${clState[idx]?' done':''}">
+        <input type="checkbox" id="cl${idx}"${clState[idx]?' checked':''} onchange="toggleCl(${idx})">
+        <label for="cl${idx}">${item}</label></div>`;
+    }).join('')}</div>`;
+  }).join('');
+  const tot=Object.keys(clState).length,done=Object.values(clState).filter(Boolean).length;
+  document.getElementById('clCount').textContent=`${done} of ${tot} items`;
+  document.getElementById('clFill').style.width=(done/tot*100)+'%';
+}
+function toggleCl(i){clState[i]=!clState[i];buildCl();}
+function resetCl(){Object.keys(clState).forEach(k=>clState[k]=false);buildCl();}
+buildCl();
+
+// ── SOURCES
+const srcs=[
+  ['SSA: Retirement Benefits','https://www.ssa.gov/benefits/retirement'],
+  ['SSA: Full Retirement Age by Birth Year','https://www.ssa.gov/benefits/retirement/planner/ageincrease.html'],
+  ['SSA: When to Start Receiving Benefits','https://www.ssa.gov/faqs/en/questions/KA-03391.html'],
+  ['SSA: Family & Spousal Benefits','https://www.ssa.gov/family'],
+  ['SSA: Survivor Benefits','https://www.ssa.gov/survivor'],
+  ['IRS: 401(k) Distribution Rules','https://www.irs.gov/retirement-plans/plan-participant-employee/401k-resource-guide-plan-participants-general-distribution-rules'],
+  ['IRS: Early Distribution Exceptions','https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-tax-on-early-distributions'],
+  ['IRS: RMD FAQs','https://www.irs.gov/retirement-plans/retirement-plan-and-ira-required-minimum-distributions-faqs'],
+  ['IRS: Seniors & Retirees Resources','https://www.irs.gov/individuals/seniors-retirees'],
+  ['Medicare.gov: Coverage Choices','https://www.medicare.gov/what-medicare-covers/your-medicare-coverage-choices'],
+  ['Medicare.gov: What Original Medicare Does Not Cover','https://www.medicare.gov/providers-services/original-medicare/not-covered'],
+  ['Medicare.gov: Long-Term Care','https://www.medicare.gov/coverage/long-term-care'],
+  ['Medicare.gov: When Coverage Starts','https://www.medicare.gov/basics/get-started-with-medicare/sign-up/when-does-medicare-coverage-start'],
+  ['NPS: Senior Passes','https://www.nps.gov/planyourvisit/passes.htm'],
+  ['ACL: Eldercare Locator','https://eldercare.acl.gov/'],
+  ['CFPB: Reverse Mortgage Loans','https://www.consumerfinance.gov/consumer-tools/reverse-mortgages/'],
+  ['CFPB: Resources for Older Adults','https://www.consumerfinance.gov/consumer-tools/educator-tools/resources-for-older-adults/'],
+  ['USA.gov: Approaching Retirement','https://www.usa.gov/approaching-retirement']
+];
+document.getElementById('srcGrid').innerHTML=srcs.map((s,i)=>`
+  <div class="src"><div class="src-n">${i+1}</div><a href="${s[1]}" target="_blank">${s[0]}</a></div>`).join('');
+
+// ── CHATBOT
+const qa=[
+  {k:['social security','ss','62','67','claim','when to'],a:"Claiming Social Security at 62 permanently reduces your monthly benefit by up to 30% vs. Full Retirement Age (67 for those born 1960+). Waiting to 70 gives you 124% of your FRA benefit. Break-even for waiting is around age 78–83.\n\n💡 Couples strategy: lower earner claims at 62, higher earner waits to 70 to maximize the survivor benefit."},
+  {k:['4%','safe withdrawal','withdraw','4 percent'],a:"The 4% rule says you can withdraw 4% of your portfolio in year 1 of retirement and adjust for inflation each year, with historically low risk of running out over 30 years. On a $1M portfolio that's $40,000/yr or ~$3,333/month.\n\nSome planners now suggest 3.5% for longer retirements (35+ years)."},
+  {k:['rule of 55','55','early 401k'],a:"The Rule of 55 lets you withdraw from your current employer's 401(k) penalty-free if you leave that employer in the year you turn 55 or later. Withdrawals are still taxed as ordinary income.\n\n⚠️ Applies only to your most recent employer's plan — not IRAs or old 401(k)s. Don't roll over if you plan to use this rule."},
+  {k:['roth','traditional','ira','roth vs'],a:"Traditional IRA/401(k): Tax deduction now, pay taxes on withdrawals later. Better if you're in a high bracket today and expect lower taxes in retirement.\n\nRoth: No deduction now, but withdrawals in retirement are completely tax-free. Better if you expect to be in a higher bracket later.\n\nGeneral rule: younger & lower income = favor Roth. Higher income now = favor Traditional."},
+  {k:['rmd','required minimum','mandatory withdrawal'],a:"RMDs must start at age 73 (age 75 starting 2033 for those born 1960+). You must withdraw a minimum amount annually from traditional 401(k)s and IRAs.\n\nMissing an RMD triggers a 25% excise tax on the missed amount. Roth IRAs are exempt from RMDs during your lifetime."},
+  {k:['medicare','part a','part b','advantage'],a:"Medicare has 4 parts:\n• Part A (Hospital): Usually free if 40+ work quarters\n• Part B (Medical): ~$175/month\n• Part C (Medicare Advantage): Private plan bundling A+B, often with extras\n• Part D (Drugs): Separate prescription plans\n\nEnroll during your Initial Enrollment Period starting 3 months before you turn 65 — missing it triggers a permanent premium penalty."},
+  {k:['halal','islamic','shariah','zakat','hajj','muslim'],a:"For Muslim retirees:\n\n📿 Investing: Look for Shariah-compliant funds in your 401(k), or use a Self-Directed IRA for halal equities or sukuk.\n\n🕌 Zakat: 2.5% of net wealth above nisab annually — budget for this in retirement.\n\n🕋 Hajj: Budget $8,000–$15,000+ per person from the US.\n\n📜 Estate: Work with an attorney familiar with both US law and Islamic Faraid inheritance rules."},
+  {k:['hsa','health savings','triple tax'],a:"An HSA has a triple tax advantage: deductible contributions, tax-free growth, and tax-free withdrawals for qualified medical expenses. After 65 you can withdraw for any purpose (taxed like an IRA).\n\nYou must be enrolled in a qualifying high-deductible health plan (HDHP) to contribute. Many treat the HSA as a stealth retirement account."},
+  {k:['catch up','catch-up','age 50'],a:"At age 50, you can make extra catch-up contributions:\n• 401(k): +$7,500 extra = $31,000 total in 2025\n• IRA: +$1,000 extra = $8,000 total in 2025\n\nIf you started saving late, ages 50–65 are your highest-leverage window. Maximize both every single year."},
+  {k:['reverse mortgage','home equity'],a:"A reverse mortgage lets homeowners 62+ convert home equity into cash without monthly repayments. The loan is repaid when you sell, move out, or pass away.\n\n⚠️ CFPB warnings: balance grows with interest, you're still responsible for property taxes, insurance, and maintenance, and it reduces the inheritance you leave. Compare carefully with HELOCs or downsizing first."}
+];
+function botAnswer(q){
+  const ql=q.toLowerCase();
+  for(const item of qa)if(item.k.some(k=>ql.includes(k)))return item.a;
+  return"Great question! For the most accurate answers, check the official sources on this page: SSA.gov for Social Security, IRS.gov for tax rules, and Medicare.gov for healthcare. You can also scroll to the relevant section above.";
+}
+function addMsg(txt,who){
+  const d=document.createElement('div');d.className='cwm '+who;d.textContent=txt;
+  document.getElementById('cwMsgs').appendChild(d);
+  document.getElementById('cwMsgs').scrollTop=99999;
+}
+function sendChat(){const val=document.getElementById('cwInput').value.trim();if(!val)return;askBot(val);document.getElementById('cwInput').value='';}
+function askBot(q){document.getElementById('chatWin').classList.add('open');addMsg(q,'user');setTimeout(()=>addMsg(botAnswer(q),'bot'),280);}
+function toggleChat(){document.getElementById('chatWin').classList.toggle('open');}
+
+// ── DEV SPECS TOGGLE
+function toggleDevSpecs(){
+  document.getElementById('dsBtn').classList.toggle('open');
+  document.getElementById('dsPanel').classList.toggle('show');
+}
+</script>
+</body>
+</html>
